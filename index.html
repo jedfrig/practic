@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Citizen</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.umd.min.js"></script>
+    <link
+      href="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.css"
+      rel="stylesheet"
+    />
+    <style></style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <pre id="info"><button onclick="clearMarkers()">Clear markers</button></pre>
+  </body>
+  <script>
+    function clearMarkers() {
+      localStorage.clear();
+    }
+    const markers = [];
+    maptilersdk.config.apiKey = 'FeLE2yBSiMMi7tgevphq';
+    const map = new maptilersdk.Map({
+      container: 'map', // container's id or the HTML element in which the SDK will render the map
+      style: maptilersdk.MapStyle.STREETS,
+      center: [30.5, 50.5], // starting position [lng, lat]
+      zoom: 14, // starting zoom
+    });
+
+    map.on('click', function (e) {
+      const marker = new maptilersdk.Marker({
+        color: '#FFF',
+        draggable: true,
+      })
+        .setLngLat([e.lngLat.lng, e.lngLat.lat])
+        .addTo(map);
+      const markerItog = {
+        lng: marker._lngLat.lng,
+        lat: marker._lngLat.lat,
+      };
+      localStorage.setItem(
+        `marker${Math.floor(Math.random() * 100) + 1}`,
+        JSON.stringify(markerItog),
+      );
+      for (let i = 0; i < localStorage.length; i++) {
+        const a = localStorage.key(i);
+        let marker = [];
+        marker = JSON.parse(localStorage.getItem(a));
+        console.log(marker);
+        const markerMap = new maptilersdk.Marker({
+          color: '#ff0000',
+          draggable: true,
+        })
+          .setLngLat([marker.lng, marker.lat])
+          .addTo(map);
+      }
+    });
+  </script>
+</html>
